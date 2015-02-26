@@ -14,17 +14,16 @@ static volatile os_timer_t some_timer;
 
 void some_timerfunc(void *arg)
 {
-    //Do blinky stuff
-    if (GPIO_REG_READ(GPIO_OUT_ADDRESS) & BIT2)
+    //Do blinky stuff simultaniously on GPIO2 and GPIO5
+    if (GPIO_REG_READ(GPIO_OUT_ADDRESS) & (BIT2 | BIT5) )
     {
         //Set GPIO2 and GPIO5 to LOW
-        gpio_output_set(BIT5, BIT2, BIT2|BIT5, 0);
-
+        gpio_output_set(0, BIT2|BIT5, BIT2|BIT5, 0);
     }
     else
     {
         //Set GPIO2 and GPIO5 to HIGH
-        gpio_output_set(BIT2, BIT5, BIT2|BIT5, 0);
+        gpio_output_set(BIT2|BIT5, 0, BIT2|BIT5, 0);
     }
 }
 
@@ -33,12 +32,6 @@ static void ICACHE_FLASH_ATTR
 user_procTask(os_event_t *events)
 {
     os_delay_us(10);
-}
-
-static void ICACHE_FLASH_ATTR
-task_hello(os_event_t *events)
-{
-    os_printf("Hello World!\n\r");
 }
 
 //Init function
@@ -68,13 +61,11 @@ user_init()
 
     //Arm the timer
     //&some_timer is the pointer
-    //1000 is the fire time in ms
+    //1000 is the fire time in ms (aka 1 second)
     //0 for once and 1 for repeating
     os_timer_arm(&some_timer, 1000, 1);
 
     //Start os task
-    //system_os_task(user_procTask, user_procTaskPrio, user_procTaskQueue, user_procTaskQueueLen);
-
-    system_os_task(task_hello, user_procTaskPrio, user_procTaskQueue, user_procTaskQueueLen);
+    system_os_task(user_procTask, user_procTaskPrio, user_procTaskQueue, user_procTaskQueueLen);
     system_os_post(user_procTaskPrio, 0, 0 );
 }

@@ -4,7 +4,7 @@ Blinking LED example for GPIO2 and GPIO5 of ESP8266
 ## Hardware Requirements
 * ESP8266 (such as MOD-WIFI-ESP8266-DEV)
 * Breadboard
-* 3.3 Power supply (such as Olimex USB-PWR or YwRobot)
+* 3.3 Power supply (such as Olimex USB-PWR or YwRobot) and adapter
 * 2x 5mm Red (or another color) LED
 * 2x 270 Ω Resistor (red, purple, brown stripes) 1
 * USB-Serial-Cable-F (USB to UART serial interface)
